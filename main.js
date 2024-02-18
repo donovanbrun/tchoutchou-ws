@@ -24,6 +24,7 @@ wss.on('connection', (ws) => {
     };
     clients.push(client);
     console.log("Total clients: ", clients.length);
+    sendName(ws, name);
     sendClients();
 
     const data = {
@@ -82,6 +83,10 @@ function handleViewportUpdate(ws, data, client) {
 
 function sendClients() {
     sentToAll(new Message(MessageType.clients, clients));
+}
+
+function sendName(ws, name) {
+    ws.send(new Message(MessageType.name, name).json);
 }
 
 function sentToAll(message) {
