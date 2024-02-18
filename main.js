@@ -1,17 +1,37 @@
 const Message = require("./Message.js");
 const MessageType = require("./MessageType.js");
 
+const fs = require('fs');
 const WebSocket = require('ws');
 
 const wss = new WebSocket.Server({ port: 8080 });
 
-const map = [];
-for (let i = 0; i < 100; i++) {
-    map.push([]);
-    for (let j = 0; j < 100; j++) {
-        map[i].push(null);
+let map = [];
+const mapSavePath = "data/map.json";
+
+const initMap = () => {
+    if (fs.existsSync(mapSavePath)) {
+        const data = fs.readFileSync(mapSavePath, 'utf8');
+        map = JSON.parse(data);
+        return;
+    }
+
+    for (let i = 0; i < 100; i++) {
+        map.push([]);
+        for (let j = 0; j < 100; j++) {
+            map[i].push(null);
+        }
     }
 }
+initMap();
+
+const saveMap = () => {
+    if (wss.clients.size === 0) return;
+    fs.writeFileSync(mapSavePath, JSON.stringify(map));
+    console.log("Map saved");
+}
+
+setInterval(saveMap, 60000);
 
 const clients = [];
 
