@@ -44,7 +44,7 @@ wss.on('connection', (ws) => {
     const name = "client-" + Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
     const client = {
         name,
-        color: (Math.random() * 0xFFFFFF << 0).toString(16),
+        color: (Math.random() * 0xFFFFFF << 0).toString(16).slice(-6),
     };
     clients.push(client);
     console.log("Total clients: ", clients.length);
