@@ -7,7 +7,8 @@ const WebSocket = require('ws');
 const wss = new WebSocket.Server({ port: 8080 });
 
 let map = [];
-const mapSavePath = "data/map.json";
+const mapSaveRep = "data";
+const mapSavePath = mapSaveRep + "/map.json";
 
 const initMap = () => {
     if (fs.existsSync(mapSavePath)) {
@@ -27,6 +28,9 @@ initMap();
 
 const saveMap = () => {
     if (wss.clients.size === 0) return;
+    if (!fs.existsSync(mapSaveRep)) {
+        fs.mkdirSync(mapSaveRep);
+    }
     fs.writeFileSync(mapSavePath, JSON.stringify(map));
     console.log("Map saved");
 }
